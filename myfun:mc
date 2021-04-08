@@ -26,6 +26,9 @@ mc () {
             mc_is dryrun yes && echo }} $mc_cmd_magic_kli7kubr
             mc_is dryrun yes || $mc_cmd_magic_kli7kubr
             ;;
+        __show.)
+            echo $mc_cmd_magic_kli7kubr
+            ;;
         __add.)
             shift
             export mc_cmd_magic_kli7kubr="$mc_cmd_magic_kli7kubr $*"

@@ -1,84 +1,50 @@
 #!/bin/sh
 
-__deref () { eval "echo \$${1}"; }
+mc_show () { echo }}} $mc_cmd_magic_kli7kubr; }
+mc_new  () { unset  mc_cmd_magic_kli7kubr; }
+mc_run  () { $mc_cmd_magic_kli7kubr; }
+mc_add  () { export  mc_cmd_magic_kli7kubr="$mc_cmd_magic_kli7kubr $*"; }
+
+
 
 mc () {
-    mc__new () {
-        mc__clear_flags
-        while [ ! -z "$1" ]; do
-            mc__isflag $1 && export mc_FLAG_$1=$2
-            mc__isflag $1 || echo [mc __new]: BAD FLAG: "[$1]"
-            shift
-            shift
-        done
-    }
-    mc_FLAGS=(nohelp dryrun)
-    mc__isflag      () { for flag in ${mc_FLAGS[@]}; do [ "$1" = "${flag}" ] && return 0; done; return 1; }
-    mc__clear_flags () { for flag in ${mc_FLAGS[@]}; do  unset mc_FLAG_$flag; done; }
-    mc_v4k () { __deref mc_FLAG_${1}; }
-    mc_is () { [ "$2" = "$(mc_v4k $1)" ]; }
-    case $1. in
-        __new.)
-            shift
-            mc__new $*
-            ;;
-        __run.)
-            mc_is dryrun yes && echo }} $mc_cmd_magic_kli7kubr
-            mc_is dryrun yes || $mc_cmd_magic_kli7kubr
-            ;;
-        __show.)
-            echo $mc_cmd_magic_kli7kubr
-            ;;
-        __add.)
-            shift
-            export mc_cmd_magic_kli7kubr="$mc_cmd_magic_kli7kubr $*"
-            ;;
-        -h.|--help.)
-            mc__usage
-            ;;
-        .)
-            mc_is nohelp yes || mc__usage
-            ;;
+    case x$1 in
+        x.show)
+            mc_show ;;
+        x.new)
+            mc_new ;;
+        x.run)
+            mc_run ;;
+        x--help|x-h)
+            mc_usage >&2 ;;
+        x.)
+            shift;  mc_add $*  ;;
         *)
-            export mc_cmd_magic_kli7kubr="$mc_cmd_magic_kli7kubr $*"
-            ;;
+            echo 'try [mc -h].' >&2  ;;
     esac
-    unset mc_is
-    unset mc__new
-    unset mc__isflag
-    unset mc_clear_flags
-    unset mc_FLAGS
 }
 
-mc__usage () {
+mc_usage () {
 cat << EOF
 [MYFUNCTIONS] --  MC -- Make Command
 
         Build a complex command with varied options from pieces.
 
 USAGE
-        mc              -- this help
-        mc -h           -- this help
-        mc --help       -- this help
-        mc __new         -- clear the buffer
-        mc __add ARGS    -- append args to the buffer
-        mc __run         -- run the buffer
+        mc            -- this help
+        mc -h         -- this help
+        mc --help     -- this help
+        mc .new       -- clear the buffer
+        mc .run       -- run the buffer
+        mc .show      -- run the buffer
+        mc .  ARGS    -- append args to the buffer
 
-NOTE:
-        The flag [__add] can be ommitted if the first arg is none of
-        the recognized flags.  This is why the flags in this script
-        are preceeded by underscores rather than dashes. It is less 
-        likely to conflict with args added in typical use.
-
-        An exception is -h and --help which is kept for consistancy
-        with all myfunctions. If either is passed as a first arg to
-        [__add] then [__add] cannot be omitted.
 
 EXAMPLE
         The lines
             $ mc .new
-            $ mc .add  find
-            $ mc .add  -name foo
+            $ mc .  find
+            $ mc .  -name foo
             $ mc .run
         effectuates
             $ find -name foo

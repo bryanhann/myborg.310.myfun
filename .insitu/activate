@@ -1,1 +1,2 @@
-export PATH=$(dirname ${PATH}):${PWD}
+export PATH=${PATH}:$(dirname ${PWD})
+
